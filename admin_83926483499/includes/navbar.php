@@ -42,11 +42,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <i class="fas fa-user-shield me-1"></i> Admins
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link <?php echo $current_page === 'test_email.php' ? 'active' : ''; ?>" href="test_email.php">
-                        <i class="fas fa-envelope-open-text me-1"></i> Test Email
-                    </a>
-                </li>
+
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item">

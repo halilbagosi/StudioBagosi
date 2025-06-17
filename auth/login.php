@@ -14,8 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     
     if (!empty($contact) && !empty($package_id) && !empty($event_date) && !empty($event_time)) {
         try {
-            // Log the input values
-            error_log("Guest booking attempt - Contact: " . $contact . ", Package ID: " . $package_id . ", Date: " . $event_date . ", Time: " . $event_time);
+
             
             // Combine date and time
             $event_datetime = $event_date . ' ' . $event_time;
@@ -24,21 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             $stmt = $pdo->prepare("INSERT INTO bookings (user_id, package_id, booking_date, event_date, status, notes) VALUES (NULL, ?, CURDATE(), ?, 'pending', ?)");
             $notes = 'Guest booking via contact: ' . $contact;
             
-            // Log the booking attempt
-            error_log("Creating guest booking - Package ID: " . $package_id . ", Event Date: " . $event_datetime);
+
             
             $stmt->execute([$package_id, $event_datetime, $notes]);
             
-            // Log successful booking
-            error_log("Guest booking created successfully");
+
             
             // Redirect with success message
             header('Location: ../index.php?success=guest_booking');
             exit;
         } catch (PDOException $e) {
-            error_log("Guest booking error details: " . $e->getMessage());
-            error_log("Error code: " . $e->getCode());
-            error_log("Error trace: " . $e->getTraceAsString());
             $error = "An error occurred while processing your booking. Please try again.";
         }
     } else {

@@ -25,7 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 
 // Get all gallery sets with image counts
 $stmt = $pdo->query("
-    SELECT gs.*, COUNT(gi.id) as image_count 
+    SELECT gs.*, COUNT(gi.id) as image_count,
+           CASE 
+               WHEN gs.cover_photo_data IS NOT NULL THEN 1 
+               ELSE 0 
+           END as has_cover_photo
     FROM gallery_sets gs 
     LEFT JOIN gallery_images gi ON gs.id = gi.set_id 
     GROUP BY gs.id 
@@ -336,8 +340,8 @@ if (isset($_GET['success'])) {
                 <?php foreach ($gallery_sets as $set): ?>
                 <div class="col-md-4 mb-4">
                     <div class="card gallery-card">
-                        <?php if (!empty($set['cover_photo'])): ?>
-                            <img src="<?php echo htmlspecialchars($set['cover_photo']); ?>" 
+                        <?php if ($set['has_cover_photo']): ?>
+                            <img src="serve_image.php?type=cover&id=<?php echo $set['id']; ?>" 
                                  class="card-img-top" 
                                  alt="<?php echo htmlspecialchars($set['name']); ?>">
                         <?php endif; ?>

@@ -119,8 +119,8 @@ if (!$selected_set && !empty($gallery_sets)) {
 
                 foreach($images as $image) {
                     echo '<div class="col-md-4 col-lg-3">';
-                    echo '<div class="gallery-item" data-bs-toggle="modal" data-bs-target="#galleryModal" data-image="' . $image['image_path'] . '">';
-                    echo '<img src="' . $image['image_path'] . '" alt="' . htmlspecialchars($image['title']) . '" class="img-fluid rounded">';
+                    echo '<div class="gallery-item" data-bs-toggle="modal" data-bs-target="#galleryModal" data-image="serve_image.php?type=gallery&id=' . $image['id'] . '">';
+                    echo '<img src="serve_image.php?type=gallery&id=' . $image['id'] . '" alt="' . htmlspecialchars($image['title']) . '" class="img-fluid rounded">';
                     echo '<div class="gallery-item-overlay">';
                     echo '<h5 class="text-white mb-2">' . htmlspecialchars($image['title']) . '</h5>';
                     if (!empty($image['description'])) {

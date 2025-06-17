@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
     
-    error_log("Login attempt - Username: " . $username);
+    
     
     if (!empty($username) && !empty($password)) {
         try {

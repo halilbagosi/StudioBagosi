@@ -237,7 +237,7 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach ($images as $image): ?>
                 <div class="col-md-4">
                     <div class="gallery-image">
-                        <img src="<?php echo htmlspecialchars($image['image_path']); ?>" 
+                        <img src="serve_image.php?type=gallery&id=<?php echo $image['id']; ?>" 
                              alt="<?php echo htmlspecialchars($image['title']); ?>"
                              data-bs-toggle="modal"
                              data-bs-target="#imageModal<?php echo $image['id']; ?>">
@@ -255,7 +255,7 @@ $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <button class="modal-nav-btn prev" onclick="navigateImage(-1)">
                                     <i class="fas fa-chevron-left"></i>
                                 </button>
-                                <img src="<?php echo htmlspecialchars($image['image_path']); ?>" 
+                                <img src="serve_image.php?type=gallery&id=<?php echo $image['id']; ?>" 
                                      alt="<?php echo htmlspecialchars($image['title']); ?>"
                                      class="modal-image">
                                 <button class="modal-nav-btn next" onclick="navigateImage(1)">

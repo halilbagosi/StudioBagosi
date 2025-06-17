@@ -1,6 +1,7 @@
 <?php
 require_once 'auth_check.php';
 require_once '../config/database.php';
+require_once '../config/image_helpers.php';
 
 // Handle gallery set creation with images
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
@@ -21,31 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $stmt->execute([$name]);
             $set_id = $pdo->lastInsertId();
             
-            // Setup upload directories
-            $base_upload_dir = "../uploads";
-            $gallery_dir = $base_upload_dir . "/gallery";
-            $upload_dir = $gallery_dir . "/" . $set_id;
+            // Note: No need to create directories since we're storing images in database as BLOB
             
-            // Create and verify directory permissions
-            foreach ([$base_upload_dir, $gallery_dir, $upload_dir] as $dir) {
-                if (!file_exists($dir)) {
-                    if (!@mkdir($dir, 0777, true)) {
-                        error_log("Failed to create directory: " . $dir);
-                        throw new Exception("Failed to create directory: " . $dir . ". Please check permissions.");
-                    }
-                }
-                // Ensure directory is writable
-                if (!is_writable($dir)) {
-                    error_log("Directory not writable: " . $dir);
-                    chmod($dir, 0777);
-                    if (!is_writable($dir)) {
-                        throw new Exception("Directory not writable: " . $dir . ". Please check permissions.");
-                    }
-                }
-            }
-            
-            // Handle cover photo upload
-            $cover_path = null;
+            // Handle cover photo upload - Store in database as BLOB
             if (isset($_FILES['cover_photo']) && $_FILES['cover_photo']['error'] === UPLOAD_ERR_OK) {
                 $cover_file = $_FILES['cover_photo'];
                 $cover_ext = strtolower(pathinfo($cover_file['name'], PATHINFO_EXTENSION));
@@ -55,17 +34,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     throw new Exception("Invalid cover photo file type. Allowed types: " . implode(', ', $allowed_types));
                 }
                 
-                $cover_name = 'cover.' . $cover_ext;
-                $cover_path = $upload_dir . '/' . $cover_name;
-                
-                if (!@move_uploaded_file($cover_file['tmp_name'], $cover_path)) {
-                    error_log("Failed to move cover photo to: " . $cover_path);
-                    throw new Exception("Failed to move cover photo. Please check directory permissions.");
+                // Optimize and compress cover photo
+                if (isImageCompressionAvailable()) {
+                    $optimized_data = getOptimizedImageData($cover_file['tmp_name'], $cover_file['name']);
+                    if ($optimized_data !== false) {
+                        $image_data = $optimized_data['data'];
+                        $mime_type = $optimized_data['mime_type'];
+                        $file_size = $optimized_data['compressed_size'];
+                        error_log("Cover photo compressed: {$optimized_data['compression_ratio']}% reduction");
+                    } else {
+                        throw new Exception("Failed to process cover photo");
+                    }
+                } else {
+                    // Fallback to original method if GD not available
+                    $image_data = file_get_contents($cover_file['tmp_name']);
+                    if ($image_data === false) {
+                        throw new Exception("Failed to read cover photo data");
+                    }
+                    
+                    $finfo = new finfo(FILEINFO_MIME_TYPE);
+                    $mime_type = $finfo->file($cover_file['tmp_name']);
                 }
                 
-                $cover_path = 'uploads/gallery/' . $set_id . '/' . $cover_name;
-                $stmt = $pdo->prepare("UPDATE gallery_sets SET cover_photo = ? WHERE id = ?");
-                $stmt->execute([$cover_path, $set_id]);
+                // Store in database
+                $stmt = $pdo->prepare("UPDATE gallery_sets SET cover_photo_data = ?, cover_photo_mime_type = ?, cover_photo_filename = ? WHERE id = ?");
+                $stmt->execute([$image_data, $mime_type, $cover_file['name'], $set_id]);
             }
             
             // Handle gallery images upload
@@ -76,11 +69,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $files = $_FILES['images'];
                 $file_count = count($files['name']);
                 
-                // Prepare the insert statement outside the loop
-                $insert_stmt = $pdo->prepare("INSERT INTO gallery_images (set_id, image_path, title) VALUES (?, ?, ?)");
+                // Prepare the insert statement outside the loop - Store in database as BLOB
+                $insert_stmt = $pdo->prepare("INSERT INTO gallery_images (set_id, title, image_data, mime_type, filename, file_size) VALUES (?, ?, ?, ?, ?, ?)");
                 
                 // Process files in batches to manage memory
-                $batch_size = 10;
+                $batch_size = 5; // Reduced batch size for BLOB storage
                 for ($i = 0; $i < $file_count; $i += $batch_size) {
                     $end = min($i + $batch_size, $file_count);
                     
@@ -90,6 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                                 $file_name = $files['name'][$j];
                                 $file_tmp = $files['tmp_name'][$j];
                                 $file_type = $files['type'][$j];
+                                $file_size = $files['size'][$j];
                                 
                                 if (strpos($file_type, 'image/') === 0) {
                                     $file_ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
@@ -99,22 +93,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                                         continue;
                                     }
                                     
-                                    $new_file_name = uniqid() . '.' . $file_ext;
-                                    $file_path = $upload_dir . '/' . $new_file_name;
-                                    
-                                    if (!@move_uploaded_file($file_tmp, $file_path)) {
-                                        error_log("Failed to move uploaded file to: " . $file_path);
-                                        $failed_uploads[] = $file_name . " (failed to move file)";
+                                    // Check file size (limit to 5MB)
+                                    if ($file_size > 5 * 1024 * 1024) {
+                                        $failed_uploads[] = $file_name . " (file too large - max 5MB)";
                                         continue;
                                     }
                                     
-                                    // Ensure the file is readable
-                                    chmod($file_path, 0644);
+                                    // Check if file size exceeds MySQL max_allowed_packet (safety check)
+                                    if ($file_size > 60 * 1024 * 1024) { // 60MB safety margin
+                                        $failed_uploads[] = $file_name . " (file exceeds database limits)";
+                                        continue;
+                                    }
                                     
+                                    // Optimize and compress image
+                                    if (isImageCompressionAvailable()) {
+                                        $optimized_data = getOptimizedImageData($file_tmp, $file_name);
+                                        if ($optimized_data !== false) {
+                                            $image_data = $optimized_data['data'];
+                                            $mime_type = $optimized_data['mime_type'];
+                                            $compressed_size = $optimized_data['compressed_size'];
+                                            error_log("Image compressed: {$file_name} - {$optimized_data['compression_ratio']}% reduction");
+                                        } else {
+                                            $failed_uploads[] = $file_name . " (failed to compress image)";
+                                            continue;
+                                        }
+                                    } else {
+                                        // Fallback to original method if GD not available
+                                        $image_data = file_get_contents($file_tmp);
+                                        if ($image_data === false) {
+                                            $failed_uploads[] = $file_name . " (failed to read file data)";
+                                            continue;
+                                        }
+                                        
+                                        $finfo = new finfo(FILEINFO_MIME_TYPE);
+                                        $mime_type = $finfo->file($file_tmp);
+                                        $compressed_size = $file_size;
+                                    }
+                                    
+                                    // Store in database
                                     $insert_stmt->execute([
                                         $set_id, 
-                                        'uploads/gallery/' . $set_id . '/' . $new_file_name,
-                                        pathinfo($file_name, PATHINFO_FILENAME)
+                                        pathinfo($file_name, PATHINFO_FILENAME),
+                                        $image_data,
+                                        $mime_type,
+                                        $file_name,
+                                        $compressed_size
                                     ]);
                                     $uploaded_count++;
                                 } else {
@@ -135,8 +158,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             }
             
             // Verify at least one image was uploaded
-            if ($uploaded_count === 0 && !$cover_path) {
-                throw new Exception("No images were successfully uploaded");
+            if ($uploaded_count === 0) {
+                // Check if cover photo was uploaded
+                $stmt = $pdo->prepare("SELECT cover_photo_data FROM gallery_sets WHERE id = ?");
+                $stmt->execute([$set_id]);
+                $has_cover = $stmt->fetchColumn();
+                
+                if (!$has_cover) {
+                    throw new Exception("No images were successfully uploaded");
+                }
             }
             
             $pdo->commit();
@@ -151,16 +181,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             header('Location: gallery.php?success=set_created&images=' . $uploaded_count . '&failed=' . count($failed_uploads));
             exit;
         } catch(Exception $e) {
-            $pdo->rollBack();
-            error_log("Gallery creation error: " . $e->getMessage());
-            
-            // Clean up uploaded files on error
-            if (isset($upload_dir) && file_exists($upload_dir)) {
-                array_map('unlink', glob("$upload_dir/*.*"));
-                @rmdir($upload_dir);
+            try {
+                $pdo->rollBack();
+            } catch(Exception $rollback_error) {
+                error_log("Rollback failed: " . $rollback_error->getMessage());
             }
             
-            header('Location: gallery.php?error=creation_failed&message=' . urlencode($e->getMessage()));
+            error_log("Gallery creation error: " . $e->getMessage());
+            
+            // Check for specific MySQL errors
+            $error_message = $e->getMessage();
+            if (strpos($error_message, 'MySQL server has gone away') !== false) {
+                $error_message = "Database connection lost during upload. Please try uploading smaller images or fewer images at once.";
+            } elseif (strpos($error_message, 'max_allowed_packet') !== false) {
+                $error_message = "Image files are too large for the database. Please reduce image sizes.";
+            }
+            
+            header('Location: gallery.php?error=creation_failed&message=' . urlencode($error_message));
             exit;
         }
     }
@@ -181,12 +218,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 $stmt = $pdo->prepare("DELETE FROM gallery_sets WHERE id = ?");
                 $stmt->execute([$set_id]);
                 
-                // Delete physical files
-                $upload_dir = "../uploads/gallery/" . $set_id;
-                if (file_exists($upload_dir)) {
-                    array_map('unlink', glob("$upload_dir/*.*"));
-                    rmdir($upload_dir);
-                }
+                // Note: No need to delete physical files since we're storing in database
                 
                 $pdo->commit();
                 header('Location: gallery.php?success=set_deleted');
@@ -202,7 +234,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
 // Get all gallery sets with image counts
 $stmt = $pdo->query("
-    SELECT gs.*, COUNT(gi.id) as image_count 
+    SELECT gs.*, COUNT(gi.id) as image_count,
+           CASE 
+               WHEN gs.cover_photo_data IS NOT NULL THEN 1 
+               ELSE 0 
+           END as has_cover_photo
     FROM gallery_sets gs 
     LEFT JOIN gallery_images gi ON gs.id = gi.set_id 
     GROUP BY gs.id 
@@ -350,8 +386,8 @@ $gallery_sets = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <?php foreach ($gallery_sets as $set): ?>
             <div class="col-md-4 mb-4">
                 <div class="card gallery-card">
-                    <?php if (!empty($set['cover_photo'])): ?>
-                        <img src="../<?php echo htmlspecialchars($set['cover_photo']); ?>" 
+                    <?php if ($set['has_cover_photo']): ?>
+                        <img src="../serve_image.php?type=cover&id=<?php echo $set['id']; ?>" 
                              class="card-img-top" 
                              alt="<?php echo htmlspecialchars($set['name']); ?>">
                     <?php endif; ?>

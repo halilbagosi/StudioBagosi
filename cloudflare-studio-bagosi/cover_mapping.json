@@ -1,0 +1,20 @@
+[
+    {
+        "id": 18,
+        "filename": "covers\/cover_18.jpg",
+        "local_path": "r2_migration\/covers\/cover_18.jpg",
+        "size": 377858
+    },
+    {
+        "id": 19,
+        "filename": "covers\/cover_19.jpg",
+        "local_path": "r2_migration\/covers\/cover_19.jpg",
+        "size": 353921
+    },
+    {
+        "id": 20,
+        "filename": "covers\/cover_20.jpg",
+        "local_path": "r2_migration\/covers\/cover_20.jpg",
+        "size": 345628
+    }
+]

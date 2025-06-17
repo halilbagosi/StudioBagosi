@@ -136,7 +136,7 @@ $gallery_set['description'] = $gallery_set['description'] ?? '';
                 <?php foreach ($images as $image): ?>
                 <div class="col-md-4">
                     <div class="gallery-image">
-                        <img src="../<?php echo htmlspecialchars($image['image_path']); ?>" 
+                        <img src="../serve_image.php?type=gallery&id=<?php echo $image['id']; ?>" 
                              alt="<?php echo htmlspecialchars($image['title']); ?>"
                              data-bs-toggle="modal"
                              data-bs-target="#imageModal<?php echo $image['id']; ?>">
@@ -159,7 +159,7 @@ $gallery_set['description'] = $gallery_set['description'] ?? '';
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <div class="modal-body">
-                                <img src="../<?php echo htmlspecialchars($image['image_path']); ?>" 
+                                <img src="../serve_image.php?type=gallery&id=<?php echo $image['id']; ?>" 
                                      alt="<?php echo htmlspecialchars($image['title']); ?>"
                                      class="modal-image">
                             </div>
