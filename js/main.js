@@ -1,21 +1,83 @@
 // Initialize page functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // Show success modal if there's a success message
-    const successModal = document.getElementById('successModal');
-    if (successModal) {
-        new bootstrap.Modal(successModal).show();
-    }
+    // Dark Mode Toggle Functionality
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const root = document.documentElement;
+    const navbarLogo = document.getElementById('navbarLogo');
 
-    // Handle booking button clicks
-    document.querySelectorAll('.book-now-btn').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            var packageId = this.getAttribute('data-package-id');
-            document.getElementById('booking_package_id').value = packageId;
-            var bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
-            bookingModal.show();
+    function setLogoForTheme(theme) {
+        if (!navbarLogo) return;
+        if (theme === 'dark') {
+            navbarLogo.src = 'images/Logo/BAGOSI.png';
+        } else {
+            navbarLogo.src = 'images/Logo/BAGOSI_Light.png';
+        }
+    }
+    
+    // Function to get system theme preference
+    function getSystemTheme() {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+        }
+        return 'light';
+    }
+    
+    // Always follow system preference on load
+    const systemTheme = getSystemTheme();
+    root.setAttribute('data-theme', systemTheme);
+    setLogoForTheme(systemTheme);
+    
+    // Always follow system theme changes
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+            const newTheme = e.matches ? 'dark' : 'light';
+            root.setAttribute('data-theme', newTheme);
+            setLogoForTheme(newTheme);
+            
+            // Smooth transition
+            root.style.transition = 'all 0.3s ease';
+            setTimeout(() => { root.style.transition = ''; }, 300);
+            
+            // Update navbar background immediately
+            const navbar = document.querySelector('.navbar');
+            if (navbar) {
+                if (newTheme === 'dark') {
+                    navbar.style.background = 'rgba(26, 35, 126, 0.8)';
+                    navbar.style.boxShadow = 'none';
+                } else {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.8)';
+                    navbar.style.boxShadow = 'none';
+                }
+            }
         });
-    });
+    }
+    
+    // Toggle: temporary override (no persistence); system changes will still win later
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', function() {
+            const currentTheme = root.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            root.setAttribute('data-theme', newTheme);
+            setLogoForTheme(newTheme);
+            
+            // Smooth transition
+            root.style.transition = 'all 0.3s ease';
+            setTimeout(() => { root.style.transition = ''; }, 300);
+            
+            // Update navbar immediately
+            const navbar = document.querySelector('.navbar');
+            if (navbar) {
+                if (newTheme === 'dark') {
+                    navbar.style.background = 'rgba(26, 35, 126, 0.8)';
+                    navbar.style.boxShadow = 'none';
+                } else {
+                    navbar.style.background = 'rgba(255, 255, 255, 0.8)';
+                    navbar.style.boxShadow = 'none';
+                }
+            }
+        });
+    }
 
     // Smooth scrolling for navigation links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -34,12 +96,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // Navbar background change on scroll
     window.addEventListener('scroll', function() {
         const navbar = document.querySelector('.navbar');
+        const currentTheme = root.getAttribute('data-theme');
+        
         if (window.scrollY > 50) {
-            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-            navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            if (currentTheme === 'dark') {
+                navbar.style.background = 'rgba(26, 35, 126, 0.95)';
+                navbar.style.boxShadow = '0 2px 10px rgba(255, 255, 255, 0.1)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            }
         } else {
-            navbar.style.background = 'rgba(255, 255, 255, 0.8)';
-            navbar.style.boxShadow = 'none';
+            if (currentTheme === 'dark') {
+                navbar.style.background = 'rgba(26, 35, 126, 0.8)';
+                navbar.style.boxShadow = 'none';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.8)';
+                navbar.style.boxShadow = 'none';
+            }
         }
     });
 
@@ -64,7 +138,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            // Here you would typically send the form data to your server
             alert('Faleminderit për mesazhin tuaj! Do t\'ju kontaktojmë së shpejti.');
             this.reset();
         });
@@ -105,4 +178,13 @@ document.addEventListener('DOMContentLoaded', function() {
     window.addEventListener('scroll', animateOnScroll);
     // Initial check for elements in view
     animateOnScroll();
+    
+    // Initialize navbar background based on current theme
+    const navbar = document.querySelector('.navbar');
+    const currentTheme = root.getAttribute('data-theme');
+    if (currentTheme === 'dark') {
+        navbar.style.background = 'rgba(26, 35, 126, 0.8)';
+    } else {
+        navbar.style.background = 'rgba(255, 255, 255, 0.8)';
+    }
 }); 

@@ -1,16 +1,126 @@
+/* Reset root margins to remove any top line/gap */
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
 /* Modern Variables */
 :root {
+    /* Light Mode Colors */
     --primary-color: #1a237e; /* Deep blue from logo */
     --secondary-color: #0d47a1; /* Lighter blue for accents */
     --accent-color: #2962ff; /* Bright blue for highlights */
-    --text-color: #1a237e;
+    --text-color: #ffffff;
     --light-bg: rgba(255, 255, 255, 0.95);
     --glass-bg: rgba(255, 255, 255, 0.1);
     --glass-border: rgba(255, 255, 255, 0.2);
     --glass-shadow: 0 8px 32px 0 rgba(26, 35, 126, 0.2);
-    --border-radius-lg: 30px;
-    --border-radius-md: 20px;
-    --border-radius-sm: 15px;
+    --body-bg: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    --navbar-bg: rgba(255, 255, 255, 0.8);
+    --hero-overlay: linear-gradient(to top right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+    --card-bg: rgba(255, 255, 255, 0.95);
+    --form-control-bg: rgba(255, 255, 255, 0.95);
+    --form-control-focus-bg: rgba(255, 255, 255, 0.95);
+    --footer-bg: #1a237e;
+    --gallery-overlay: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    
+    /* Buttons */
+    --btn-primary-bg: var(--primary-color);
+    --btn-primary-text: #ffffff;
+}
+
+/* Dark Mode Colors */
+[data-theme="dark"] {
+    --primary-color: #ffffff; /* Primary elements become white */
+    --secondary-color: #e0e0e0; /* Light gray for subtle accents */
+    --accent-color: #e3f2fd; /* Light blue for highlights */
+    --text-color: #ffffff; /* High-contrast text */
+    --light-bg: rgba(0, 0, 0, 0.9); /* General surface background */
+    --glass-bg: rgba(0, 0, 0, 0.2); /* Glass effect on black */
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    --body-bg: linear-gradient(135deg, #000000 0%, #111111 100%);
+    --navbar-bg: rgba(0, 0, 0, 0.85);
+    --hero-overlay: linear-gradient(to top right, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.6));
+    --card-bg: rgba(0, 0, 0, 0.9);
+    --form-control-bg: rgba(0, 0, 0, 0.9);
+    --form-control-focus-bg: rgba(0, 0, 0, 0.95);
+    --footer-bg: #000000; /* Footer surface becomes black */
+    --gallery-overlay: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+
+    /* Dark mode buttons stay brand blue for better contrast on white cards */
+    --btn-primary-bg: #1a237e;
+    --btn-primary-text: #ffffff;
+
+    /* Packages section theme */
+    --packages-bg-dark: linear-gradient(135deg, #0b1a3a, #0a1f5a);
+    --packages-text-lightblue: #a7c0ff; /* Less saturated light blue */
+}
+
+/* Light mode: make hero overlay dark blue to match brand */
+:root:not([data-theme="dark"]) {
+    --hero-overlay: linear-gradient(to top right, rgba(26, 35, 126, 0.85), rgba(13, 71, 161, 0.6));
+}
+
+/* Logo swap for dark mode */
+.navbar-brand .logo-dark { display: none; }
+[data-theme="dark"] .navbar-brand .logo-light { display: none; }
+[data-theme="dark"] .navbar-brand .logo-dark { display: inline; }
+
+/* Ensure consistent logo sizing in both themes */
+.navbar-brand .logo-light,
+.navbar-brand .logo-dark {
+    height: 50px;
+    width: auto;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Navbar Dark Mode Toggle Button */
+.navbar-dark-mode-toggle {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 9999px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.navbar-dark-mode-toggle:hover {
+    transform: translateY(-1px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .navbar-dark-mode-toggle:hover {
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.08);
+}
+
+.navbar-dark-mode-toggle:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.navbar-dark-mode-toggle i {
+    color: var(--primary-color);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.navbar-dark-mode-toggle .sun-icon { display: none; }
+[data-theme="dark"] .navbar-dark-mode-toggle .sun-icon { display: inline; }
+[data-theme="dark"] .navbar-dark-mode-toggle .moon-icon { display: none; }
+
+/* Add subtle ring focus for accessibility */
+.navbar-dark-mode-toggle:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.25);
 }
 
 /* General Styles */
@@ -18,8 +128,9 @@ body {
     font-family: 'Poppins', sans-serif;
     line-height: 1.6;
     color: var(--text-color);
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: var(--body-bg);
     overflow-x: hidden;
+    transition: all 0.3s ease;
 }
 
 /* Enhanced Animations */
@@ -82,7 +193,7 @@ body {
 
 /* Modern Navigation */
 .navbar {
-    background: rgba(255, 255, 255, 0.8) !important;
+    background: var(--navbar-bg) !important;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--glass-border);
@@ -90,6 +201,8 @@ body {
     transition: all 0.3s ease;
     border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
     animation: slideIn 0.5s ease forwards;
+    margin-top: 0;
+    border-top: none;
 }
 
 .navbar-brand img {
@@ -155,7 +268,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to top right, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+    background: var(--hero-overlay);
     z-index: 1;
 }
 
@@ -169,11 +282,16 @@ body {
     font-weight: 700;
     margin-bottom: 1.5rem;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    color: var(--text-color);
+}
+
+.hero-section .lead {
+    color: var(--text-color);
 }
 
 /* Organic Cards */
 .card {
-    background: var(--light-bg);
+    background: var(--card-bg);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid var(--glass-border);
@@ -200,6 +318,10 @@ body {
 .card:hover {
     transform: translateY(-10px);
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .card:hover {
+    box-shadow: 0 15px 35px rgba(255, 255, 255, 0.1);
 }
 
 .card:hover::before {
@@ -243,11 +365,12 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    background: var(--gallery-overlay);
     padding: 2rem;
     transform: translateY(100%);
     transition: transform 0.3s ease;
     border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
+    color: var(--primary-color);
 }
 
 .gallery-item:hover .gallery-item-overlay {
@@ -256,19 +379,26 @@ body {
 
 /* Modern Form Elements */
 .form-control {
-    background: var(--light-bg);
+    background: var(--form-control-bg);
     border: 1px solid var(--glass-border);
     border-radius: var(--border-radius-md);
     padding: 1rem;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     transition: all 0.3s ease;
+    color: var(--text-color);
+}
+
+.form-control::placeholder {
+    color: var(--text-color);
+    opacity: 0.7;
 }
 
 .form-control:focus {
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--form-control-focus-bg);
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
     border-color: var(--accent-color);
+    color: var(--text-color);
 }
 
 /* Modern Buttons */
@@ -282,6 +412,10 @@ body {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+}
+
+[data-theme="dark"] .btn {
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
 }
 
 .btn::before {
@@ -301,20 +435,34 @@ body {
     opacity: 1;
 }
 
+/* Button colors - ensure contrast in both themes */
 .btn-primary {
-    background: var(--primary-color);
+    background: var(--btn-primary-bg);
     border: none;
     box-shadow: 0 4px 15px rgba(21, 31, 107, 0.2);
+    color: var(--btn-primary-text);
 }
 
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(21, 31, 107, 0.3);
+[data-theme="dark"] .btn-primary {
+    /* In dark mode, primary-color is white, so text must be black for contrast */
+    color: #000000;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
 }
 
 /* Contact Section */
 .contact-card {
-    background: var(--light-bg);
+    background: var(--card-bg);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-radius: var(--border-radius-lg);
@@ -344,6 +492,16 @@ body {
     }
 }
 
+.contact-info h4,
+.contact-info h5 {
+    color: var(--text-color);
+}
+
+.contact-info p {
+    color: var(--text-color);
+    opacity: 0.9;
+}
+
 .social-links a {
     color: var(--primary-color);
     font-size: 2rem;
@@ -359,11 +517,12 @@ body {
 
 /* Footer */
 footer {
-    background: var(--primary-color);
+    background: var(--footer-bg);
     border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
     padding: 4rem 0 2rem;
     position: relative;
     overflow: hidden;
+    color: var(--primary-color);
 }
 
 footer::before {
@@ -374,6 +533,58 @@ footer::before {
     right: 0;
     height: 5px;
     background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
+}
+
+footer h5 {
+    color: var(--primary-color);
+}
+
+footer p {
+    color: var(--primary-color);
+    opacity: 0.9;
+}
+
+/* Section Titles */
+.section-title h2 {
+    color: var(--primary-color);
+}
+
+.section-title p,
+.section-title p1 {
+    color: var(rgba(255, 255, 255, 0.95));
+    opacity: 0.9;
+}
+
+/* Breadcrumb */
+.breadcrumb-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.breadcrumb-item.active {
+    color: var(--primary-color);
+}
+
+/* Gallery Header */
+.gallery-header {
+    background: linear-gradient(135deg, var(--footer-bg), var(--secondary-color));
+    color: var(--primary-color);
+}
+
+.gallery-header h1 {
+    color: var(--primary-color);
+}
+
+.gallery-header .lead {
+    color: var(--primary-color);
+    opacity: 0.9;
+}
+
+/* Placeholder Images */
+.placeholder-image {
+    background: linear-gradient(135deg, var(--card-bg), var(--light-bg));
+    color: var(--text-color);
+    opacity: 0.7;
 }
 
 /* Responsive Design */
@@ -393,6 +604,16 @@ footer::before {
     
     .contact-card {
         padding: 2rem;
+    }
+    
+    /* Mobile navbar adjustments */
+    .navbar-nav .nav-item {
+        margin: 0.25rem 0;
+    }
+    
+    .navbar-dark-mode-toggle {
+        margin: 0.5rem auto;
+        width: fit-content;
     }
 }
 
@@ -489,7 +710,7 @@ footer::before {
 
 .language-btn:hover {
     background: var(--primary-color);
-    color: white;
+    color: var(--footer-bg);
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(26, 35, 126, 0.2);
 }
@@ -534,7 +755,7 @@ footer::before {
     left: 0;
     right: 0;
     height: 5px;
-    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    background: linear-gradient(90deg, var(#871414), var(#2962ff));
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -564,6 +785,7 @@ footer::before {
     margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
+    color: var(--text-color);
 }
 
 .list-unstyled li i {
@@ -601,10 +823,11 @@ footer::before {
     bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+    background: var(--gallery-overlay);
     padding: 2rem;
     transform: translateY(100%);
     transition: transform 0.3s ease;
+    color: var(--primary-color);
 }
 
 .gallery-preview:hover .gallery-preview-overlay {
@@ -623,6 +846,10 @@ footer::before {
     display: none;
     opacity: 0;
     transition: opacity 0.3s ease;
+}
+
+[data-theme="dark"] .gallery-modal {
+    background: rgba(26, 35, 126, 0.9);
 }
 
 .gallery-modal.active {
@@ -647,7 +874,7 @@ footer::before {
     position: absolute;
     top: 20px;
     right: 20px;
-    color: white;
+    color: var(--primary-color);
     font-size: 2rem;
     cursor: pointer;
     transition: transform 0.3s ease;
@@ -677,7 +904,233 @@ footer::before {
     transition: width 0.6s ease, height 0.6s ease;
 }
 
+[data-theme="dark"] .btn::after {
+    background: rgba(26, 35, 126, 0.2);
+}
+
 .btn:hover::after {
     width: 300px;
     height: 300px;
+} 
+
+/* Text contrast refinements */
+.section-title h2,
+.section-title p,
+.section-title p1,
+.card-title,
+.card-text,
+.list-unstyled li,
+.contact-info h4,
+.contact-info h5,
+.contact-info p {
+    color: var(--primary-color);
+}
+
+.section-title p,
+.section-title p1,
+.card-title,
+.card-text,
+.list-unstyled li,
+.contact-info h4,
+.contact-info h5,
+.contact-info p {
+    color: var(--text-color);
+}
+
+/* Gallery overlays use text color for better contrast */
+.gallery-item-overlay,
+.gallery-preview-overlay {
+    color: var(--text-color);
+} 
+
+/* Gallery contrast fixes and persistent glows */
+/* Distinguishable very dark grey background for gallery section on home */
+[data-theme="dark"] #gallery {
+    background: #0a0a0a !important;
+}
+
+/* Gallery cards on home: persistent glow and clear borders in dark mode */
+[data-theme="dark"] .gallery-card {
+    background: #ffffff;
+    color: #222222;
+    box-shadow: 0 10px 30px rgba(10, 31, 90, 0.35), 0 0 28px rgba(10, 31, 90, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Titles and meta inside gallery cards remain dark for readability */
+[data-theme="dark"] .gallery-card .card-title { color: #111111; }
+[data-theme="dark"] .gallery-card .card-text { color: #333333; }
+
+/* Gallery view page: make content section background very dark grey after the header */
+[data-theme="dark"] .gallery-header + section {
+    background: #0a0a0a !important;
+}
+
+/* Gallery grid items: persistent glow even without hover in dark mode */
+[data-theme="dark"] .gallery-item {
+    box-shadow: 0 10px 26px rgba(10, 31, 90, 0.35), 0 0 24px rgba(10, 31, 90, 0.25);
+}
+
+/* Ensure overlay text is readable */
+[data-theme="dark"] .gallery-item-overlay h5,
+[data-theme="dark"] .gallery-item-overlay p { color: #ffffff; }
+
+/* Breadcrumb and headings maintain strong contrast on gallery page */
+[data-theme="dark"] .breadcrumb-item a,
+[data-theme="dark"] .breadcrumb-item.active,
+[data-theme="dark"] .gallery-header h1,
+[data-theme="dark"] .gallery-header .lead {
+    color: #ffffff !important;
+}
+
+/* Packages Section */
+/* Default (light) uses inline gradient from HTML; override in dark */
+[data-theme="dark"] #packages {
+    background: var(--packages-bg-dark) !important;
+}
+
+[data-theme="dark"] #packages .card-title,
+[data-theme="dark"] #packages .price {
+    color: var(--packages-text-lightblue);
+} 
+
+/* Make packages glow visible without hover (dark mode) and override inline rules */
+[data-theme="dark"] .glass-pane {
+    background: rgba(0, 0, 0, 0.35) !important;
+    box-shadow: 0 12px 40px rgba(10, 31, 90, 0.55), 0 0 60px rgba(10, 31, 90, 0.35) !important;
+    border: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Keep persistent glow on package cards in dark mode */
+[data-theme="dark"] #packages .card {
+    background: #0b0d10 !important; /* very dark card surface */
+    color: #e8edf7 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 10px 30px rgba(10, 31, 90, 0.45), 0 0 30px rgba(10, 31, 90, 0.35) !important;
+}
+
+[data-theme="dark"] #packages .card-title,
+[data-theme="dark"] #packages .price {
+    color: var(--packages-text-lightblue) !important;
+}
+
+[data-theme="dark"] #packages .card-text {
+    color: #cfd6e8 !important;
+}
+
+/* Make 'Na Kontaktoni' buttons white for better contrast in dark mode */
+[data-theme="dark"] .btn-primary {
+    background: #ffffff !important;
+    color: #0a1f5a !important;
+}
+
+[data-theme="dark"] .btn-primary:hover {
+    background: #f2f4f8 !important;
+    color: #091a3f !important;
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.18);
+} 
+
+/* Unify homepage gallery card glow with gallery page items (dark mode) */
+[data-theme="dark"] .gallery-card {
+    box-shadow: 0 10px 26px rgba(10, 31, 90, 0.35), 0 0 24px rgba(10, 31, 90, 0.25) !important;
+} 
+
+/* Dark mode: force section subtitle text to white */
+[data-theme="dark"] .section-title p,
+[data-theme="dark"] .section-title p1 {
+    color: #ffffff;
+} 
+
+/* Dark mode: dark blue buttons in packages and homepage gallery cards */
+[data-theme="dark"] #packages .btn-primary,
+[data-theme="dark"] #gallery .gallery-card .btn-primary {
+    background: #1a237e !important; /* deep dark blue */
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 6px 18px rgba(26, 35, 126, 0.35) !important;
+}
+
+[data-theme="dark"] #packages .btn-primary:hover,
+[data-theme="dark"] #gallery .gallery-card .btn-primary:hover {
+    background: #0d47a1 !important; /* slightly lighter blue on hover */
+    color: #ffffff !important;
+    box-shadow: 0 8px 24px rgba(13, 71, 161, 0.4) !important;
+} 
+
+/* Dark mode: darker homepage gallery cards with persistent glow and high contrast */
+[data-theme="dark"] #gallery .gallery-card {
+    background: #0b0d10 !important; /* very dark grey */
+    color: #e6edf7 !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 10px 26px rgba(10, 31, 90, 0.35), 0 0 24px rgba(10, 31, 90, 0.25) !important;
+}
+
+/* Ensure inner text contrasts on dark gallery cards */
+[data-theme="dark"] #gallery .gallery-card .card-title { color: #eaf0ff !important; }
+[data-theme="dark"] #gallery .gallery-card .card-text { color: #cfd6e8 !important; }
+[data-theme="dark"] #gallery .gallery-card .text-muted,
+[data-theme="dark"] #gallery .gallery-card small,
+[data-theme="dark"] #gallery .gallery-card .card-text small { color: #b8c2d6 !important; } 
+
+/* Remove card top bar effect globally */
+.card::before,
+.card::after {
+    display: none !important;
+}
+
+/* Smooth transitions for glass pane to match card breathing effect */
+.glass-pane {
+	transition: box-shadow 900ms cubic-bezier(0.22, 1, 0.36, 1), background-color 900ms cubic-bezier(0.22, 1, 0.36, 1);
+	will-change: box-shadow, background-color;
+}
+
+/* Breathing hover: slightly enlarge cards on hover (packages, homepage gallery, and gallery items) */
+#packages .card,
+#gallery .gallery-card,
+.gallery-item {
+	transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 900ms cubic-bezier(0.22, 1, 0.36, 1);
+	transform-origin: center;
+	will-change: transform, box-shadow;
+	backface-visibility: hidden;
+}
+
+#packages .card:hover,
+#gallery .gallery-card:hover,
+.gallery-item:hover {
+	transform: scale(1.02) !important; /* slightly reduced for smoother feel */
+}
+
+/* Unify button hover to match light-mode packages cards across sections */
+#packages .btn-primary:hover,
+#gallery .gallery-card .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(21, 31, 107, 0.3) !important;
+} 
+
+/* Light mode: improve contact section text contrast */
+:root:not([data-theme="dark"]) .contact-info h4,
+:root:not([data-theme="dark"]) .contact-info h5 {
+	color: var(--primary-color);
+}
+
+:root:not([data-theme="dark"]) .contact-info p {
+	color: #334155; /* dark slate for readability */
+	opacity: 1;
+}
+
+:root:not([data-theme="dark"]) .form-control {
+	color: #0f172a; /* very dark text inside inputs */
+}
+
+:root:not([data-theme="dark"]) .form-control::placeholder {
+	color: #475569; /* medium slate placeholders */
+	opacity: 1;
+} 
+
+/* Light mode: make footer text white for legibility */
+:root:not([data-theme="dark"]) footer,
+:root:not([data-theme="dark"]) footer h5,
+:root:not([data-theme="dark"]) footer p,
+:root:not([data-theme="dark"]) footer a {
+	color: #ffffff !important;
 } 
