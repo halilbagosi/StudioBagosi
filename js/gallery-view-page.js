@@ -5,9 +5,8 @@
     return div.innerHTML;
   }
 
-  document.addEventListener('DOMContentLoaded', function () {
-    var data = window.STUDIO_BAGOSI_GALLERY;
-    if (!data || !data.sets || !data.sets.length) return;
+  function renderGalleryPage(data) {
+    if (!data.sets || !data.sets.length) return;
 
     var params = new URLSearchParams(window.location.search);
     var rawId = params.get('id');
@@ -69,5 +68,24 @@
         })
         .join('');
     }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var api = window.STUDIO_BAGOSI_GALLERY;
+    if (!api || typeof api.load !== 'function') return;
+
+    api
+      .load()
+      .then(function () {
+        renderGalleryPage(window.STUDIO_BAGOSI_GALLERY);
+      })
+      .catch(function (err) {
+        console.error('Gallery load failed:', err);
+        var grid = document.getElementById('galleryImageGrid');
+        if (grid) {
+          grid.innerHTML =
+            '<p class="text-muted text-center">Galeria nuk u ngarkua. Përdorni një server lokal ose GitHub Pages.</p>';
+        }
+      });
   });
 })();

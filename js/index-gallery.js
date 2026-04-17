@@ -5,11 +5,7 @@
     return div.innerHTML;
   }
 
-  document.addEventListener('DOMContentLoaded', function () {
-    var data = window.STUDIO_BAGOSI_GALLERY;
-    var row = document.getElementById('gallerySetsRow');
-    if (!data || !row || !data.sets) return;
-
+  function renderGalleryCards(data, row) {
     row.innerHTML = data.sets
       .map(function (set) {
         var img =
@@ -41,5 +37,24 @@
         );
       })
       .join('');
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var row = document.getElementById('gallerySetsRow');
+    var api = window.STUDIO_BAGOSI_GALLERY;
+    if (!row || !api || typeof api.load !== 'function') return;
+
+    api
+      .load()
+      .then(function () {
+        var data = window.STUDIO_BAGOSI_GALLERY;
+        if (!data.sets || !data.sets.length) return;
+        renderGalleryCards(data, row);
+      })
+      .catch(function (err) {
+        console.error('Gallery load failed:', err);
+        row.innerHTML =
+          '<div class="col-12"><p class="text-muted text-center small">Galeria nuk u ngarkua. Hapni faqen përmes një serveri lokal (p.sh. <code>python -m http.server</code>) ose përmes GitHub Pages.</p></div>';
+      });
   });
 })();

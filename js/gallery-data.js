@@ -1,55 +1,32 @@
 /**
- * Single source of truth for gallery listings and detail pages (GitHub Pages / static hosting).
+ * Loads gallery data from data/gallery.json (strict JSON — no PHP-style syntax).
+ * Exposes window.STUDIO_BAGOSI_GALLERY with { sets } and getById(id).
  */
-window.STUDIO_BAGOSI_GALLERY = {
-  sets: [
-    {
-      id: 1,
-      name: 'Martesa Tradicionale',
-      description:
-        'Koleksion i momenteve më të bukura nga martesat tradicionale shqiptare',
-      image_count: 25,
-      has_cover_photo: true,
-      cover_image: 'images/gallery/wedding-traditional-cover.jpg',
-      images: [
-        { title: 'Ceremonia e Kurorës', description: 'Momenti i shenjtë i kurorëzimit' },
-        { title: 'Vallëzimi i Parë', description: 'Vallëzimi i parë si bashkëshortë' },
-        { title: 'Familja e Re', description: 'Portret familjar pas ceremonisë' },
-      ],
-    },
-    {
-      id: 2,
-      name: 'Martesa Moderne',
-      description: 'Fotografi moderne dhe krijuese për çiftet e reja',
-      image_count: 30,
-      has_cover_photo: true,
-      cover_image: 'images/gallery/wedding-modern-cover.jpg',
-      images: [
-        { title: 'Sesion Fotografi', description: 'Fotografi kreative në natyrë' },
-        { title: 'Detaje Dasme', description: 'Detaje të bukura nga dita e dasmës' },
-        { title: 'Portrete Çifti', description: 'Portrete romantike të çiftit' },
-      ],
-    },
-    {
-      id: 3,
-      name: 'Portrete Profesionale',
-      description:
-        'Sesione fotografike profesionale dhe portrete artistike',
-      image_count: 15,
-      has_cover_photo: true,
-      cover_image: 'images/gallery/portraits-cover.jpg',
-      images: [
-        { title: 'Portret Profesional', description: 'Portret profesional në studio' },
-        { title: 'Fotografi Artistike', description: 'Fotografi artistike dhe kreative' },
-        { title: 'Sesion Individual', description: 'Sesion fotografik individual' },
-      ],
-    },
-  ],
-};
+(function () {
+  function getById(sets, id) {
+    var n = Number(id);
+    for (var i = 0; i < sets.length; i++) {
+      if (sets[i].id === n) return sets[i];
+    }
+    return null;
+  }
 
-window.STUDIO_BAGOSI_GALLERY.getById = function (id) {
-  const n = Number(id);
-  return window.STUDIO_BAGOSI_GALLERY.sets.find(function (s) {
-    return s.id === n;
-  });
-};
+  window.STUDIO_BAGOSI_GALLERY = { sets: [], getById: function () {} };
+
+  window.STUDIO_BAGOSI_GALLERY.load = function () {
+    var url = new URL('data/gallery.json', window.location.href);
+    return fetch(url, { credentials: 'same-origin' })
+      .then(function (res) {
+        if (!res.ok) throw new Error('Gallery data HTTP ' + res.status);
+        return res.json();
+      })
+      .then(function (data) {
+        if (!data || !Array.isArray(data.sets)) throw new Error('Invalid gallery JSON');
+        window.STUDIO_BAGOSI_GALLERY.sets = data.sets;
+        window.STUDIO_BAGOSI_GALLERY.getById = function (id) {
+          return getById(window.STUDIO_BAGOSI_GALLERY.sets, id);
+        };
+        return window.STUDIO_BAGOSI_GALLERY;
+      });
+  };
+})();
