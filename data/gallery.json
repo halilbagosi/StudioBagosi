@@ -2,11 +2,11 @@
   "sets": [
     {
       "id": 1,
-      "name": "Martesa Tradicionale",
-      "description": "Koleksion i momenteve më të bukura nga martesat tradicionale shqiptare",
+      "name": "Evente",
+      "description": "Koleksion i momenteve më të bukura nga eventet e ndryshme",
       "image_count": 25,
       "has_cover_photo": true,
-      "cover_image": "images/gallery/wedding-traditional-cover.jpg",
+      "cover_image": "images/gallery/Events cover.jpg",
       "images": [
         { "title": "Ceremonia e Kurorës", "description": "Momenti i shenjtë i kurorëzimit" },
         { "title": "Vallëzimi i Parë", "description": "Vallëzimi i parë si bashkëshortë" },
@@ -15,11 +15,11 @@
     },
     {
       "id": 2,
-      "name": "Martesa Moderne",
+      "name": "Dasma",
       "description": "Fotografi moderne dhe krijuese për çiftet e reja",
       "image_count": 30,
       "has_cover_photo": true,
-      "cover_image": "images/gallery/wedding-modern-cover.jpg",
+      "cover_image": "images/gallery/fotodasma.jpg",
       "images": [
         { "title": "Sesion Fotografi", "description": "Fotografi kreative në natyrë" },
         { "title": "Detaje Dasme", "description": "Detaje të bukura nga dita e dasmës" },
@@ -28,15 +28,28 @@
     },
     {
       "id": 3,
-      "name": "Portrete Profesionale",
+      "name": "Klipe",
       "description": "Sesione fotografike profesionale dhe portrete artistike",
       "image_count": 15,
       "has_cover_photo": true,
-      "cover_image": "images/gallery/portraits-cover.jpg",
+      "cover_image": "images/gallery/klip.jpg",
       "images": [
         { "title": "Portret Profesional", "description": "Portret profesional në studio" },
         { "title": "Fotografi Artistike", "description": "Fotografi artistike dhe kreative" },
         { "title": "Sesion Individual", "description": "Sesion fotografik individual" }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Sete Fotografike",
+      "description": "Fotografi moderne dhe krijuese për çiftet e reja",
+      "image_count": 30,
+      "has_cover_photo": true,
+      "cover_image": "images/gallery/set.jpg",
+      "images": [
+        { "title": "Sesion Fotografi", "description": "Fotografi kreative në natyrë" },
+        { "title": "Detaje Dasme", "description": "Detaje të bukura nga dita e dasmës" },
+        { "title": "Portrete Çifti", "description": "Portrete romantike të çiftit" }
       ]
     }
   ]
