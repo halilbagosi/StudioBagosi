@@ -1,54 +1,13 @@
-<?php
-// Static gallery data (previously from database)
-$gallery_sets = [
-    1 => [
-        'id' => 1,
-        'name' => 'Martesa Tradicionale',
-        'description' => 'Koleksion i momenteve më të bukura nga martesat tradicionale shqiptare',
-        'images' => [
-            ['title' => 'Ceremonia e Kurorës', 'description' => 'Momenti i shenjtë i kurorëzimit'],
-            ['title' => 'Vallëzimi i Parë', 'description' => 'Vallëzimi i parë si bashkëshortë'],
-            ['title' => 'Familja e Re', 'description' => 'Portret familjar pas ceremonisë'],
-        ]
-    ],
-    2 => [
-        'id' => 2,
-        'name' => 'Martesa Moderne',
-        'description' => 'Fotografi moderne dhe krijuese për çiftet e reja',
-        'images' => [
-            ['title' => 'Sesion Fotografi', 'description' => 'Fotografi kreative në natyrë'],
-            ['title' => 'Detaje Dasme', 'description' => 'Detaje të bukura nga dita e dasmës'],
-            ['title' => 'Portrete Çifti', 'description' => 'Portrete romantike të çiftit'],
-        ]
-    ],
-    3 => [
-        'id' => 3,
-        'name' => 'Portrete Profesionale',
-        'description' => 'Sesione fotografike profesionale dhe portrete artistike',
-        'images' => [
-            ['title' => 'Portret Profesional', 'description' => 'Portret profesional në studio'],
-            ['title' => 'Fotografi Artistike', 'description' => 'Fotografi artistike dhe kreative'],
-            ['title' => 'Sesion Individual', 'description' => 'Sesion fotografik individual'],
-        ]
-    ]
-];
-
-// Get the gallery set ID from URL parameter
-$set_id = isset($_GET['id']) ? (int)$_GET['id'] : 1;
-
-// Get the selected gallery set
-$selected_set = $gallery_sets[$set_id] ?? $gallery_sets[1];
-?>
 <!DOCTYPE html>
 <html lang="sq">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Studio Bagosi - <?php echo htmlspecialchars($selected_set['name']); ?></title>
+    <title>Studio Bagosi - Galeria</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css?v=<?php echo filemtime('css/style.css'); ?>">
+    <link rel="stylesheet" href="css/style.css">
     <style>
         .gallery-header {
             background: linear-gradient(135deg, #1a237e, #0d47a1);
@@ -114,7 +73,7 @@ $selected_set = $gallery_sets[$set_id] ?? $gallery_sets[1];
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="index.php">
+            <a class="navbar-brand" href="index.html">
                 <img id="navbarLogo" src="images/Logo/BAGOSI_Light.png" alt="Studio Bagosi Logo" style="height: 50px;">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -123,16 +82,13 @@ $selected_set = $gallery_sets[$set_id] ?? $gallery_sets[1];
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php#home">Kryefaqja</a>
+                        <a class="nav-link" href="index.html#home">Kryefaqja</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php#gallery">Galeria</a>
+                        <a class="nav-link" href="index.html#gallery">Galeria</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="index.php#packages">Paketat</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php#contact">Kontakti</a>
+                        <a class="nav-link" href="index.html#contact">Kontakti</a>
                     </li>
                     <li class="nav-item ms-3">
                         <button type="button" class="navbar-dark-mode-toggle" id="darkModeToggle" title="Toggle Dark Mode" aria-label="Toggle Dark Mode">
@@ -154,18 +110,16 @@ $selected_set = $gallery_sets[$set_id] ?? $gallery_sets[1];
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
-                                <a href="index.php" class="text-white">Kryefaqja</a>
+                                <a href="index.html" class="text-white">Kryefaqja</a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="index.php#gallery" class="text-white">Galeria</a>
+                                <a href="index.html#gallery" class="text-white">Galeria</a>
                             </li>
-                            <li class="breadcrumb-item active text-white" aria-current="page">
-                                <?php echo htmlspecialchars($selected_set['name']); ?>
-                            </li>
+                            <li class="breadcrumb-item active text-white" aria-current="page" id="galleryBreadcrumbCurrent">—</li>
                         </ol>
                     </nav>
-                    <h1 class="display-4 mb-3"><?php echo htmlspecialchars($selected_set['name']); ?></h1>
-                    <p class="lead"><?php echo htmlspecialchars($selected_set['description']); ?></p>
+                    <h1 class="display-4 mb-3" id="galleryHeaderTitle">—</h1>
+                    <p class="lead" id="galleryHeaderDescription">—</p>
                 </div>
             </div>
         </div>
@@ -177,37 +131,14 @@ $selected_set = $gallery_sets[$set_id] ?? $gallery_sets[1];
             <!-- Gallery Navigation -->
             <div class="row mb-4">
                 <div class="col-12">
-                    <div class="d-flex flex-wrap gap-2">
-                        <?php foreach ($gallery_sets as $set): ?>
-                        <a href="gallery_view.php?id=<?php echo $set['id']; ?>" 
-                           class="btn <?php echo $set['id'] == $selected_set['id'] ? 'btn-primary' : 'btn-outline-primary'; ?>">
-                            <?php echo htmlspecialchars($set['name']); ?>
-                        </a>
-                        <?php endforeach; ?>
-                    </div>
+                    <div class="d-flex flex-wrap gap-2" id="gallerySetNav"></div>
                 </div>
             </div>
 
             <!-- Gallery Images -->
             <div class="row">
                 <div class="col-12">
-                    <div class="gallery-grid">
-                        <?php foreach ($selected_set['images'] as $index => $image): ?>
-                        <div class="gallery-item">
-                            <div class="placeholder-image">
-                                <div class="text-center">
-                                    <i class="fas fa-image fa-3x mb-2"></i>
-                                    <br>
-                                    <?php echo htmlspecialchars($image['title']); ?>
-                                </div>
-                            </div>
-                            <div class="gallery-item-overlay">
-                                <h5><?php echo htmlspecialchars($image['title']); ?></h5>
-                                <p class="mb-0"><?php echo htmlspecialchars($image['description']); ?></p>
-                            </div>
-                        </div>
-                        <?php endforeach; ?>
-                    </div>
+                    <div class="gallery-grid" id="galleryImageGrid"></div>
                 </div>
             </div>
 
@@ -217,7 +148,7 @@ $selected_set = $gallery_sets[$set_id] ?? $gallery_sets[1];
                     <div class="bg-light p-4 rounded">
                         <h3>Ju pëlqeu ajo që pamë?</h3>
                         <p>Na kontaktoni për të diskutuar projektin tuaj të ardhshëm</p>
-                        <a href="index.php#contact" class="btn btn-primary btn-lg">Na Kontaktoni</a>
+                        <a href="index.html#contact" class="btn btn-primary btn-lg">Na Kontaktoni</a>
                     </div>
                 </div>
             </div>
@@ -240,6 +171,8 @@ $selected_set = $gallery_sets[$set_id] ?? $gallery_sets[1];
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/main.js?v=<?php echo filemtime('js/main.js'); ?>"></script>
+    <script src="js/gallery-data.js"></script>
+    <script src="js/gallery-view-page.js"></script>
+    <script src="js/main.js"></script>
 </body>
-</html> 
+</html>

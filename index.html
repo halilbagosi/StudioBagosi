@@ -1,35 +1,3 @@
-<?php
-// No database connection needed anymore
-// This is now a static portfolio website
-
-// Static gallery sets data (previously from database)
-$gallery_sets = [
-    [
-        'id' => 1,
-        'name' => 'Martesa Tradicionale',
-        'description' => 'Koleksion i momenteve më të bukura nga martesat tradicionale shqiptare',
-        'image_count' => 25,
-        'has_cover_photo' => true,
-        'cover_image' => 'images/gallery/wedding-traditional-cover.jpg'
-    ],
-    [
-        'id' => 2,
-        'name' => 'Martesa Moderne',
-        'description' => 'Fotografi moderne dhe krijuese për çiftet e reja',
-        'image_count' => 30,
-        'has_cover_photo' => true,
-        'cover_image' => 'images/gallery/wedding-modern-cover.jpg'
-    ],
-    [
-        'id' => 3,
-        'name' => 'Portrete Profesionale',
-        'description' => 'Sesione fotografike profesionale dhe portrete artistike',
-        'image_count' => 15,
-        'has_cover_photo' => true,
-        'cover_image' => 'images/gallery/portraits-cover.jpg'
-    ]
-];
-?>
 <!DOCTYPE html>
 <html lang="sq">
 <head>
@@ -39,7 +7,7 @@ $gallery_sets = [
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css?v=<?php echo filemtime('css/style.css'); ?>">
+    <link rel="stylesheet" href="css/style.css">
     <style>
         .gallery-card {
             height: 100%;
@@ -297,31 +265,7 @@ $gallery_sets = [
                 <p1>Eksploroni koleksionin tonë të momenteve më të bukura.</p1>
             </div>
             
-            <div class="row">
-                <?php foreach ($gallery_sets as $set): ?>
-                <div class="col-md-4 mb-4">
-                    <div class="card gallery-card">
-                        <?php if ($set['has_cover_photo']): ?>
-                            <img src="<?php echo $set['cover_image']; ?>" 
-                                 class="card-img-top" 
-                                 alt="<?php echo htmlspecialchars($set['name']); ?>">
-                        <?php endif; ?>
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo htmlspecialchars($set['name']); ?></h5>
-                            <p class="card-text"><?php echo htmlspecialchars($set['description']); ?></p>
-                            <p class="card-text">
-                                <small class="text-muted">
-                                    <?php echo $set['image_count']; ?> imazhe
-                                </small>
-                            </p>
-                            <a href="gallery_view.php?id=<?php echo $set['id']; ?>" class="btn btn-primary">
-                                <i class="fas fa-images"></i> Shiko Galerinë
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
+            <div class="row" id="gallerySetsRow"></div>
         </div>
     </section>
 
@@ -357,16 +301,16 @@ $gallery_sets = [
                             <div class="col-md-6">
                                 <form id="contactForm">
                                     <div class="mb-3">
-                                        <input type="text" class="form-control" placeholder="Emri juaj" required>
+                                        <input type="text" name="name" class="form-control" placeholder="Emri juaj" required>
                                     </div>
                                     <div class="mb-3">
-                                        <input type="email" class="form-control" placeholder="Email juaj" required>
+                                        <input type="email" name="email" class="form-control" placeholder="Email juaj" required>
                                     </div>
                                     <div class="mb-3">
-                                        <input type="tel" class="form-control" placeholder="Telefoni juaj">
+                                        <input type="tel" name="phone" class="form-control" placeholder="Telefoni juaj">
                                     </div>
                                     <div class="mb-3">
-                                        <textarea class="form-control" rows="5" placeholder="Mesazhi juaj" required></textarea>
+                                        <textarea name="message" class="form-control" rows="5" placeholder="Mesazhi juaj" required></textarea>
                                     </div>
                                     <button type="submit" class="btn btn-primary w-100">Dërgo Mesazhin</button>
                                 </form>
@@ -394,6 +338,8 @@ $gallery_sets = [
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/main.js?v=<?php echo filemtime('js/main.js'); ?>"></script>
+    <script src="js/gallery-data.js"></script>
+    <script src="js/index-gallery.js"></script>
+    <script src="js/main.js"></script>
 </body>
-</html> 
+</html>
