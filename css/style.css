@@ -1,4 +1,8 @@
 /* Reset root margins to remove any top line/gap */
+html {
+    scroll-padding-top: 5.5rem; /* anchor links clear fixed navbar */
+}
+
 html, body {
     margin: 0;
     padding: 0;
@@ -340,12 +344,14 @@ body {
     padding: 0;
 }
 
-/* Gallery view page */
+/* Gallery view page — padding clears fixed .navbar (flow starts at top of viewport) */
 .gallery-header {
     background: linear-gradient(135deg, #1a237e, #0d47a1);
     color: #ffffff;
-    padding: 100px 0 50px 0;
-    margin-top: 76px;
+    margin-top: 0;
+    padding: clamp(6.75rem, 14vw, 9rem) 0 clamp(2.5rem, 5vw, 3.25rem) 0;
+    position: relative;
+    z-index: 0;
 }
 
 .gallery-page-content .gallery-grid {

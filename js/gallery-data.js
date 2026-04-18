@@ -1,6 +1,8 @@
 /**
  * Loads gallery data from data/gallery.json (strict JSON — no PHP-style syntax).
- * Each set can use folder + files[], or folder + manifest.json, or legacy images[].
+ * Each set: optional folder + optional files[]; if files is absent/empty, loads folder/manifest.json.
+ * Regenerate manifests after adding photos: node scripts/generate-gallery-manifests.js
+ * Legacy images[] (paths or { src }) still supported.
  * Exposes window.STUDIO_BAGOSI_GALLERY with { sets } and getById(id).
  */
 (function () {

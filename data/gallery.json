@@ -6,8 +6,7 @@
       "description": "Koleksion i momenteve më të bukura nga eventet e ndryshme",
       "has_cover_photo": true,
       "cover_image": "images/gallery/evente/Events cover.jpg",
-      "folder": "images/gallery/evente",
-      "files": ["Events cover.jpg"]
+      "folder": "images/gallery/evente"
     },
     {
       "id": 2,
@@ -15,8 +14,7 @@
       "description": "Fotografi moderne dhe krijuese për çiftet e reja",
       "has_cover_photo": true,
       "cover_image": "images/gallery/dasma/fotodasma.jpg",
-      "folder": "images/gallery/dasma",
-      "files": ["fotodasma.jpg"]
+      "folder": "images/gallery/dasma"
     },
     {
       "id": 3,
@@ -24,8 +22,7 @@
       "description": "Sesione fotografike profesionale dhe portrete artistike",
       "has_cover_photo": true,
       "cover_image": "images/gallery/klipe/klip.jpg",
-      "folder": "images/gallery/klipe",
-      "files": ["klip.jpg"]
+      "folder": "images/gallery/klipe"
     },
     {
       "id": 4,
@@ -33,8 +30,7 @@
       "description": "Fotografi moderne dhe krijuese për çiftet e reja",
       "has_cover_photo": true,
       "cover_image": "images/gallery/sete/set.jpg",
-      "folder": "images/gallery/sete",
-      "files": ["set.jpg"]
+      "folder": "images/gallery/sete"
     }
   ]
 }
