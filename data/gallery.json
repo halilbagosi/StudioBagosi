@@ -5,48 +5,36 @@
       "name": "Evente",
       "description": "Koleksion i momenteve më të bukura nga eventet e ndryshme",
       "has_cover_photo": true,
-      "cover_image": "images/gallery/Events cover.jpg",
-      "images": [
-        { "title": "Ceremonia e Kurorës", "description": "Momenti i shenjtë i kurorëzimit", "src": "images/gallery/Events cover.jpg" },
-        { "title": "Vallëzimi i Parë", "description": "Vallëzimi i parë si bashkëshortë", "src": "images/gallery/Events cover.jpg" },
-        { "title": "Familja e Re", "description": "Portret familjar pas ceremonisë", "src": "images/gallery/Events cover.jpg" }
-      ]
+      "cover_image": "images/gallery/evente/Events cover.jpg",
+      "folder": "images/gallery/evente",
+      "files": ["Events cover.jpg"]
     },
     {
       "id": 2,
       "name": "Dasma",
       "description": "Fotografi moderne dhe krijuese për çiftet e reja",
       "has_cover_photo": true,
-      "cover_image": "images/gallery/fotodasma.jpg",
-      "images": [
-        { "title": "Sesion Fotografi", "description": "Fotografi kreative në natyrë", "src": "images/gallery/fotodasma.jpg" },
-        { "title": "Detaje Dasme", "description": "Detaje të bukura nga dita e dasmës", "src": "images/gallery/fotodasma.jpg" },
-        { "title": "Portrete Çifti", "description": "Portrete romantike të çiftit", "src": "images/gallery/fotodasma.jpg" }
-      ]
+      "cover_image": "images/gallery/dasma/fotodasma.jpg",
+      "folder": "images/gallery/dasma",
+      "files": ["fotodasma.jpg"]
     },
     {
       "id": 3,
       "name": "Klipe",
       "description": "Sesione fotografike profesionale dhe portrete artistike",
       "has_cover_photo": true,
-      "cover_image": "images/gallery/klip.jpg",
-      "images": [
-        { "title": "Portret Profesional", "description": "Portret profesional në studio", "src": "images/gallery/klip.jpg" },
-        { "title": "Fotografi Artistike", "description": "Fotografi artistike dhe kreative", "src": "images/gallery/klip.jpg" },
-        { "title": "Sesion Individual", "description": "Sesion fotografik individual", "src": "images/gallery/klip.jpg" }
-      ]
+      "cover_image": "images/gallery/klipe/klip.jpg",
+      "folder": "images/gallery/klipe",
+      "files": ["klip.jpg"]
     },
     {
       "id": 4,
       "name": "Sete Fotografike",
       "description": "Fotografi moderne dhe krijuese për çiftet e reja",
       "has_cover_photo": true,
-      "cover_image": "images/gallery/set.jpg",
-      "images": [
-        { "title": "Sesion Fotografi", "description": "Fotografi kreative në natyrë", "src": "images/gallery/set.jpg" },
-        { "title": "Detaje Dasme", "description": "Detaje të bukura nga dita e dasmës", "src": "images/gallery/set.jpg" },
-        { "title": "Portrete Çifti", "description": "Portrete romantike të çiftit", "src": "images/gallery/set.jpg" }
-      ]
+      "cover_image": "images/gallery/sete/set.jpg",
+      "folder": "images/gallery/sete",
+      "files": ["set.jpg"]
     }
   ]
 }

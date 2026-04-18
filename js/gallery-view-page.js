@@ -47,36 +47,33 @@
     }
 
     var grid = document.getElementById('galleryImageGrid');
-    if (grid && selected.images) {
-      var coverFallback = selected.cover_image || '';
-      grid.innerHTML = selected.images
-        .map(function (image, idx) {
-          var src = image.src || image.file || coverFallback;
-          var alt = escapeHtml(image.title);
-          var loading = idx < 2 ? 'eager' : 'lazy';
-          var fetchPriority = idx === 0 ? ' fetchpriority="high"' : '';
-          return (
-            '<div class="gallery-item gallery-item--tile">' +
-            '<img src="' +
-            escapeHtml(src) +
-            '" alt="' +
-            alt +
-            '" class="gallery-item-photo" loading="' +
-            loading +
-            '" decoding="async"' +
-            fetchPriority +
-            '>' +
-            '<div class="gallery-item-overlay">' +
-            '<div class="gallery-item-overlay-inner">' +
-            '<h5>' +
-            escapeHtml(image.title) +
-            '</h5>' +
-            '<p class="mb-0">' +
-            escapeHtml(image.description) +
-            '</p></div></div></div>'
-          );
-        })
-        .join('');
+    var urls = selected.photo_urls || [];
+    if (grid) {
+      if (!urls.length) {
+        grid.innerHTML =
+          '<p class="text-muted text-center">Nuk ka foto në këtë galeri. Shtoni skedarë në dosjen e caktuar ose përditësoni <code>files</code> / <code>manifest.json</code>.</p>';
+      } else {
+        var altBase = selected.name || 'Gallery';
+        grid.innerHTML = urls
+          .map(function (src, idx) {
+            var loading = idx < 2 ? 'eager' : 'lazy';
+            var fetchPriority = idx === 0 ? ' fetchpriority="high"' : '';
+            var alt = escapeHtml(altBase + ' — ' + (idx + 1));
+            return (
+              '<div class="gallery-item gallery-item--tile gallery-item--photo-only">' +
+              '<img src="' +
+              escapeHtml(src) +
+              '" alt="' +
+              alt +
+              '" class="gallery-item-photo" loading="' +
+              loading +
+              '" decoding="async"' +
+              fetchPriority +
+              '></div>'
+            );
+          })
+          .join('');
+      }
     }
   }
 

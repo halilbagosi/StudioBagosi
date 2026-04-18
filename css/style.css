@@ -362,6 +362,11 @@ body {
     cursor: default;
 }
 
+/* Detail page: image-only tiles (no caption overlay) */
+.gallery-item--photo-only {
+    cursor: default;
+}
+
 .gallery-item-photo {
     width: 100%;
     height: 100%;
