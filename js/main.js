@@ -152,32 +152,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Animate elements on scroll
-    const animateOnScroll = () => {
-        const elements = document.querySelectorAll('.card, .gallery-item, .contact-card');
-        
-        elements.forEach(element => {
-            const elementTop = element.getBoundingClientRect().top;
-            const elementBottom = element.getBoundingClientRect().bottom;
-            
-            if (elementTop < window.innerHeight && elementBottom > 0) {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
-            }
+    // Contact section only: one-time reveal (avoids jank with gallery hover/transform)
+    (function initContactReveal() {
+        const cards = document.querySelectorAll('.contact-card');
+        if (!cards.length) return;
+
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduced) {
+            cards.forEach(function (el) {
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+            });
+            return;
+        }
+
+        cards.forEach(function (el) {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(18px)';
+            el.style.transition =
+                'opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)';
         });
-    };
 
-    // Set initial styles for animation
-    document.querySelectorAll('.card, .gallery-item, .contact-card').forEach(element => {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    });
+        const observer = new IntersectionObserver(
+            function (entries, obs) {
+                entries.forEach(function (entry) {
+                    if (!entry.isIntersecting) return;
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    obs.unobserve(entry.target);
+                });
+            },
+            { rootMargin: '0px 0px -6% 0px', threshold: 0.06 }
+        );
 
-    // Listen for scroll events
-    window.addEventListener('scroll', animateOnScroll);
-    // Initial check for elements in view
-    animateOnScroll();
+        cards.forEach(function (el) {
+            observer.observe(el);
+        });
+    })();
     
     // Initialize navbar background based on current theme
     const navbar = document.querySelector('.navbar');

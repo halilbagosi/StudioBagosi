@@ -48,22 +48,32 @@
 
     var grid = document.getElementById('galleryImageGrid');
     if (grid && selected.images) {
+      var coverFallback = selected.cover_image || '';
       grid.innerHTML = selected.images
-        .map(function (image) {
+        .map(function (image, idx) {
+          var src = image.src || image.file || coverFallback;
+          var alt = escapeHtml(image.title);
+          var loading = idx < 2 ? 'eager' : 'lazy';
+          var fetchPriority = idx === 0 ? ' fetchpriority="high"' : '';
           return (
-            '<div class="gallery-item">' +
-            '<div class="placeholder-image">' +
-            '<div class="text-center">' +
-            '<i class="fas fa-image fa-3x mb-2"></i><br>' +
-            escapeHtml(image.title) +
-            '</div></div>' +
+            '<div class="gallery-item gallery-item--tile">' +
+            '<img src="' +
+            escapeHtml(src) +
+            '" alt="' +
+            alt +
+            '" class="gallery-item-photo" loading="' +
+            loading +
+            '" decoding="async"' +
+            fetchPriority +
+            '>' +
             '<div class="gallery-item-overlay">' +
+            '<div class="gallery-item-overlay-inner">' +
             '<h5>' +
             escapeHtml(image.title) +
             '</h5>' +
             '<p class="mb-0">' +
             escapeHtml(image.description) +
-            '</p></div></div>'
+            '</p></div></div></div>'
           );
         })
         .join('');

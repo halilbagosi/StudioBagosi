@@ -7,33 +7,47 @@
 
   function renderGalleryCards(data, row) {
     row.innerHTML = data.sets
-      .map(function (set) {
-        var img =
-          set.has_cover_photo && set.cover_image
-            ? '<img src="' +
-              escapeHtml(set.cover_image) +
-              '" class="card-img-top" alt="' +
-              escapeHtml(set.name) +
-              '">'
-            : '';
+      .map(function (set, idx) {
+        var cover =
+          set.has_cover_photo && set.cover_image ? escapeHtml(set.cover_image) : '';
+        var alt = escapeHtml(set.name);
+        var loading = idx < 2 ? 'eager' : 'lazy';
+        var fetchPriority = idx === 0 ? ' fetchpriority="high"' : '';
+        var img = cover
+          ? '<img src="' +
+            cover +
+            '" class="gallery-card-img" alt="' +
+            alt +
+            '" loading="' +
+            loading +
+            '" decoding="async"' +
+            fetchPriority +
+            '>'
+          : '<div class="gallery-card-placeholder" role="img" aria-label="' +
+            alt +
+            '"><i class="fas fa-images fa-3x"></i></div>';
         return (
           '<div class="col-md-4 mb-4">' +
-          '<div class="card gallery-card">' +
-          img +
-          '<div class="card-body">' +
-          '<h5 class="card-title">' +
-          escapeHtml(set.name) +
-          '</h5>' +
-          '<p class="card-text">' +
-          escapeHtml(set.description) +
-          '</p>' +
-          '<p class="card-text"><small class="text-muted">' +
-          String(set.image_count) +
-          ' imazhe</small></p>' +
           '<a href="gallery.html?id=' +
           encodeURIComponent(String(set.id)) +
-          '" class="btn btn-primary"><i class="fas fa-images"></i> Shiko Galerinë</a>' +
-          '</div></div></div>'
+          '" class="gallery-card-link text-decoration-none">' +
+          '<article class="gallery-card gallery-card--preview">' +
+          '<div class="gallery-card-media">' +
+          img +
+          '</div>' +
+          '<div class="gallery-card-overlay">' +
+          '<div class="gallery-card-overlay-inner">' +
+          '<h3 class="gallery-card-title">' +
+          escapeHtml(set.name) +
+          '</h3>' +
+          '<p class="gallery-card-desc">' +
+          escapeHtml(set.description) +
+          '</p>' +
+          '<p class="gallery-card-meta"><span>' +
+          String(set.image_count) +
+          ' imazhe</span></p>' +
+          '<span class="gallery-card-cta"><i class="fas fa-images me-2"></i>Shiko Galerinë</span>' +
+          '</div></div></article></a></div>'
         );
       })
       .join('');

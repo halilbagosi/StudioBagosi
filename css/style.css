@@ -335,46 +335,244 @@ body {
 /* Gallery Section */
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-    padding: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 0;
 }
 
-.gallery-item {
+/* Gallery view page */
+.gallery-header {
+    background: linear-gradient(135deg, #1a237e, #0d47a1);
+    color: #ffffff;
+    padding: 100px 0 50px 0;
+    margin-top: 76px;
+}
+
+.gallery-page-content .gallery-grid {
+    margin-top: 0.5rem;
+}
+
+/* Detail grid tiles: full-bleed image, text fades in on hover */
+.gallery-item--tile {
     position: relative;
     overflow: hidden;
     border-radius: var(--border-radius-lg);
-    cursor: pointer;
     box-shadow: var(--glass-shadow);
-    aspect-ratio: 1;
+    aspect-ratio: 4 / 3;
+    cursor: default;
 }
 
-.gallery-item img {
+.gallery-item-photo {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
+    display: block;
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.gallery-item:hover img {
-    transform: scale(1.1);
+.gallery-item--tile:hover .gallery-item-photo,
+.gallery-item--tile:focus-within .gallery-item-photo {
+    transform: scale(1.04);
 }
 
-.gallery-item-overlay {
+.gallery-item--tile .gallery-item-overlay {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: var(--gallery-overlay);
-    padding: 2rem;
-    transform: translateY(100%);
-    transition: transform 0.3s ease;
-    border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
-    color: var(--primary-color);
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    padding: 0;
+    margin: 0;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.88) 0%,
+        rgba(0, 0, 0, 0.42) 48%,
+        rgba(0, 0, 0, 0) 76%
+    );
+    opacity: 0;
+    transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+    border-radius: inherit;
+    color: #ffffff;
+    transform: none;
 }
 
-.gallery-item:hover .gallery-item-overlay {
-    transform: translateY(0);
+.gallery-item--tile:hover .gallery-item-overlay,
+.gallery-item--tile:focus-within .gallery-item-overlay {
+    opacity: 1;
+}
+
+.gallery-item-overlay-inner {
+    padding: 1.35rem 1.5rem 1.2rem;
+    width: 100%;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75), 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+.gallery-item-overlay-inner h5 {
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+}
+
+.gallery-item-overlay-inner p {
+    color: rgba(255, 255, 255, 0.93);
+    font-size: 0.95rem;
+}
+
+/* Homepage gallery preview cards */
+.gallery-card-link {
+    display: block;
+    color: inherit;
+    border-radius: 15px;
+}
+
+.gallery-card-link:focus-visible {
+    outline: 3px solid var(--accent-color);
+    outline-offset: 3px;
+}
+
+.gallery-card--preview {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.14);
+    transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+
+.gallery-card-link:hover .gallery-card--preview,
+.gallery-card-link:focus-visible .gallery-card--preview {
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.22);
+    transform: translateY(-4px);
+}
+
+.gallery-card-media {
+    position: absolute;
+    inset: 0;
+}
+
+.gallery-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gallery-card-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+    color: #64748b;
+}
+
+.gallery-card-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.45) 52%,
+        rgba(0, 0, 0, 0) 74%
+    );
+    opacity: 0;
+    transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gallery-card-link:hover .gallery-card-overlay,
+.gallery-card-link:focus-visible .gallery-card-overlay {
+    opacity: 1;
+}
+
+.gallery-card-link:hover .gallery-card-img,
+.gallery-card-link:focus-visible .gallery-card-img {
+    transform: scale(1.04);
+}
+
+.gallery-card-overlay-inner {
+    padding: 1.5rem 1.5rem 1.35rem;
+    width: 100%;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75), 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+.gallery-card-title {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin: 0 0 0.5rem;
+}
+
+.gallery-card-desc {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.92);
+    margin: 0 0 0.75rem;
+    line-height: 1.45;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.gallery-card-meta {
+    margin: 0;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.gallery-card-cta {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+}
+
+/* CTA strip on gallery.html */
+.gallery-cta {
+    border-radius: var(--border-radius-lg);
+    padding: 2rem 1.75rem;
+    background: linear-gradient(135deg, rgba(26, 35, 126, 0.09), rgba(13, 71, 161, 0.07));
+    border: 1px solid rgba(26, 35, 126, 0.14);
+    color: #0f172a;
+}
+
+.gallery-cta h3 {
+    color: #1a237e;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.gallery-cta p {
+    color: #334155;
+    margin-bottom: 1.25rem;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gallery-item--tile .gallery-item-overlay,
+    .gallery-card-overlay {
+        opacity: 1;
+        transition: none;
+    }
+    .gallery-item--tile .gallery-item-photo,
+    .gallery-card-img {
+        transform: none !important;
+        transition: none;
+    }
+    .gallery-card--preview,
+    .gallery-card-link:hover .gallery-card--preview,
+    .gallery-card-link:focus-visible .gallery-card--preview {
+        transform: none;
+    }
 }
 
 /* Modern Form Elements */
@@ -945,11 +1143,10 @@ footer p {
     color: var(--text-color);
 }
 
-/* Gallery overlays use text color for better contrast */
-.gallery-item-overlay,
+/* Legacy gallery preview overlays (non-tile) */
 .gallery-preview-overlay {
     color: var(--text-color);
-} 
+}
 
 /* Gallery contrast fixes and persistent glows */
 /* Distinguishable very dark grey background for gallery section on home */
@@ -957,31 +1154,40 @@ footer p {
     background: #0a0a0a !important;
 }
 
-/* Gallery cards on home: persistent glow and clear borders in dark mode */
-[data-theme="dark"] .gallery-card {
-    background: #ffffff;
-    color: #222222;
-    box-shadow: 0 10px 30px rgba(10, 31, 90, 0.35), 0 0 28px rgba(10, 31, 90, 0.25);
+/* Homepage preview cards: image-based; glow only */
+[data-theme="dark"] #gallery .gallery-card--preview {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 28px rgba(10, 31, 90, 0.35);
     border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* Titles and meta inside gallery cards remain dark for readability */
-[data-theme="dark"] .gallery-card .card-title { color: #111111; }
-[data-theme="dark"] .gallery-card .card-text { color: #333333; }
-
-/* Gallery view page: make content section background very dark grey after the header */
-[data-theme="dark"] .gallery-header + section {
+/* Gallery view page: dark content area */
+[data-theme="dark"] .gallery-header + section,
+[data-theme="dark"] .gallery-page-content {
     background: #0a0a0a !important;
 }
 
-/* Gallery grid items: persistent glow even without hover in dark mode */
-[data-theme="dark"] .gallery-item {
-    box-shadow: 0 10px 26px rgba(10, 31, 90, 0.35), 0 0 24px rgba(10, 31, 90, 0.25);
+[data-theme="dark"] .gallery-item--tile {
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 24px rgba(10, 31, 90, 0.3);
 }
 
-/* Ensure overlay text is readable */
-[data-theme="dark"] .gallery-item-overlay h5,
-[data-theme="dark"] .gallery-item-overlay p { color: #ffffff; }
+[data-theme="dark"] .gallery-item-overlay-inner h5,
+[data-theme="dark"] .gallery-item-overlay-inner p {
+    color: #ffffff;
+}
+
+[data-theme="dark"] .gallery-cta {
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.94));
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    color: #e2e8f0;
+}
+
+[data-theme="dark"] .gallery-cta h3 {
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .gallery-cta p {
+    color: #cbd5e1;
+}
 
 /* Breadcrumb and headings maintain strong contrast on gallery page */
 [data-theme="dark"] .breadcrumb-item a,
@@ -1038,47 +1244,25 @@ footer p {
     box-shadow: 0 6px 20px rgba(255, 255, 255, 0.18);
 } 
 
-/* Unify homepage gallery card glow with gallery page items (dark mode) */
-[data-theme="dark"] .gallery-card {
-    box-shadow: 0 10px 26px rgba(10, 31, 90, 0.35), 0 0 24px rgba(10, 31, 90, 0.25) !important;
-} 
-
 /* Dark mode: force section subtitle text to white */
 [data-theme="dark"] .section-title p,
 [data-theme="dark"] .section-title p1 {
     color: #ffffff;
 } 
 
-/* Dark mode: dark blue buttons in packages and homepage gallery cards */
-[data-theme="dark"] #packages .btn-primary,
-[data-theme="dark"] #gallery .gallery-card .btn-primary {
+/* Dark mode: dark blue buttons in packages section */
+[data-theme="dark"] #packages .btn-primary {
     background: #1a237e !important; /* deep dark blue */
     color: #ffffff !important;
     border: none !important;
     box-shadow: 0 6px 18px rgba(26, 35, 126, 0.35) !important;
 }
 
-[data-theme="dark"] #packages .btn-primary:hover,
-[data-theme="dark"] #gallery .gallery-card .btn-primary:hover {
+[data-theme="dark"] #packages .btn-primary:hover {
     background: #0d47a1 !important; /* slightly lighter blue on hover */
     color: #ffffff !important;
     box-shadow: 0 8px 24px rgba(13, 71, 161, 0.4) !important;
 } 
-
-/* Dark mode: darker homepage gallery cards with persistent glow and high contrast */
-[data-theme="dark"] #gallery .gallery-card {
-    background: #0b0d10 !important; /* very dark grey */
-    color: #e6edf7 !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    box-shadow: 0 10px 26px rgba(10, 31, 90, 0.35), 0 0 24px rgba(10, 31, 90, 0.25) !important;
-}
-
-/* Ensure inner text contrasts on dark gallery cards */
-[data-theme="dark"] #gallery .gallery-card .card-title { color: #eaf0ff !important; }
-[data-theme="dark"] #gallery .gallery-card .card-text { color: #cfd6e8 !important; }
-[data-theme="dark"] #gallery .gallery-card .text-muted,
-[data-theme="dark"] #gallery .gallery-card small,
-[data-theme="dark"] #gallery .gallery-card .card-text small { color: #b8c2d6 !important; } 
 
 /* Remove card top bar effect globally */
 .card::before,
@@ -1092,25 +1276,20 @@ footer p {
 	will-change: box-shadow, background-color;
 }
 
-/* Breathing hover: slightly enlarge cards on hover (packages, homepage gallery, and gallery items) */
-#packages .card,
-#gallery .gallery-card,
-.gallery-item {
+/* Breathing hover: package cards only (gallery previews use their own hover motion) */
+#packages .card {
 	transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 900ms cubic-bezier(0.22, 1, 0.36, 1);
 	transform-origin: center;
 	will-change: transform, box-shadow;
 	backface-visibility: hidden;
 }
 
-#packages .card:hover,
-#gallery .gallery-card:hover,
-.gallery-item:hover {
-	transform: scale(1.02) !important; /* slightly reduced for smoother feel */
+#packages .card:hover {
+	transform: scale(1.02) !important;
 }
 
 /* Unify button hover to match light-mode packages cards across sections */
-#packages .btn-primary:hover,
-#gallery .gallery-card .btn-primary:hover {
+#packages .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(21, 31, 107, 0.3) !important;
 } 

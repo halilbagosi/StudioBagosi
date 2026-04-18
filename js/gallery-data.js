@@ -11,6 +11,16 @@
     return null;
   }
 
+  /** Set image_count from images.length so the UI stays in sync with the JSON list. */
+  function normalizeSets(sets) {
+    for (var i = 0; i < sets.length; i++) {
+      var set = sets[i];
+      var n = Array.isArray(set.images) ? set.images.length : 0;
+      set.image_count = n;
+    }
+    return sets;
+  }
+
   window.STUDIO_BAGOSI_GALLERY = { sets: [], getById: function () {} };
 
   window.STUDIO_BAGOSI_GALLERY.load = function () {
@@ -22,7 +32,7 @@
       })
       .then(function (data) {
         if (!data || !Array.isArray(data.sets)) throw new Error('Invalid gallery JSON');
-        window.STUDIO_BAGOSI_GALLERY.sets = data.sets;
+        window.STUDIO_BAGOSI_GALLERY.sets = normalizeSets(data.sets);
         window.STUDIO_BAGOSI_GALLERY.getById = function (id) {
           return getById(window.STUDIO_BAGOSI_GALLERY.sets, id);
         };
